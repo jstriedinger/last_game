@@ -6,3 +6,14 @@
 *.csproj
 *.unityproj
 *.sln
+
+ExportedObj/
+*.svd
+*.userprefs
+*.csproj
+*.pidb
+*.suo
+*.sln
+*.user
+*.unityproj
+*.booproj
