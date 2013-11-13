@@ -8,6 +8,7 @@ public class Player : MonoBehaviour {
     private Vector3 v3_moveDirection = Vector3.zero;
     private CharacterController controller;
 	private float disToGround;
+	public float maxV;
 	public bool Gravitronned = false;
 	
 	void Start()
@@ -27,12 +28,23 @@ public class Player : MonoBehaviour {
 		else if(Input.GetKey(KeyCode.LeftArrow))
 			transform.Translate(transform.right * -speed*Time.deltaTime);
 		if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
-    		rigidbody.velocity = new Vector3(rigidbody.velocity.x, jumpSpeed, rigidbody.velocity.z);   
+		{
+			Debug.Log("isgrounded");
+			rigidbody.velocity = new Vector3(rigidbody.velocity.x, Gravitronned?jumpSpeed*-1:jumpSpeed, rigidbody.velocity.z);
+		}
+		
+		//Checks for max velocity
+		if(rigidbody.velocity.sqrMagnitude > (maxV*maxV))
+		{
+			rigidbody.velocity = rigidbody.velocity.normalized*maxV;
+		}
     }
 	
 	
-	public bool IsGrounded () {
-  		return Physics.Raycast(transform.position, -Vector3.up, disToGround + 0.1f);
+	public bool IsGrounded () 
+	{
+		
+  		return Physics.Raycast(transform.position, Gravitronned?Vector3.up:-Vector3.up, disToGround + 0.1f);
 	}
 	
 	
