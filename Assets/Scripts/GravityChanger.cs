@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum gravSide {horizontal, vertical, Ho_Ve_r, Ho_Ve_l}
+public enum gravSide {horizontal, vertical, HV_Black, HV_White}
 public enum colorChange{white, black}
 
 public class GravityChanger : MonoBehaviour {
@@ -31,8 +31,8 @@ public class GravityChanger : MonoBehaviour {
 			case gravSide.vertical:
 				StartCoroutine(switchVer_Gravity(col.gameObject));
 				break;
-			case gravSide.Ho_Ve_r:
-				StartCoroutine(switchHVR_Gravity(col.gameObject));
+			case gravSide.HV_Black:
+				StartCoroutine(switchHV_BLACK_Gravity(col.gameObject));
 				break;
 			}
 		}
@@ -68,6 +68,11 @@ public class GravityChanger : MonoBehaviour {
 			Physics.gravity = new Vector3(-9.8f,0f,0f);//Horizontal change to inversed
 			player.renderer.material.SetColor("_Color",Color.white);
 			player.GetComponent<Player>().pos = position.ver_left;
+			if(player.rigidbody.velocity.y < 2f)
+			{
+				//push a little
+				player.rigidbody.velocity = new Vector3(4f,player.rigidbody.velocity.y,0f);
+			}
 		}
 		else
 		{
@@ -77,7 +82,33 @@ public class GravityChanger : MonoBehaviour {
 		}	
 	}
 	
-	IEnumerator switchHVR_Gravity(GameObject player)
+	IEnumerator switchHV_BLACK_Gravity(GameObject player)
+	{
+		float posPlayerx = player.transform.position.x;
+		float posx = this.transform.position.x;
+		yield return new WaitForSeconds(0.3f);
+		if(posPlayerx<posx)
+		{
+			player.rigidbody.AddForce(Vector3.right*50, ForceMode.VelocityChange);
+			player.rigidbody.AddForce(Vector3.up*50, ForceMode.VelocityChange);
+			//player.rigidbody.velocity = new Vector3(6f,4f,0);
+			Physics.gravity = new Vector3(-9.8f,0f,0f);//To left vertical
+			player.renderer.material.SetColor("_Color",Color.white);
+			player.GetComponent<Player>().pos = position.ver_left;
+
+		}
+		else
+		{
+			player.rigidbody.AddForce(Vector3.right*-20, ForceMode.VelocityChange);
+			player.rigidbody.AddForce(Vector3.up*-1, ForceMode.VelocityChange);
+			Physics.gravity = new Vector3(0,9.8f,0f);//To horizontal inversed
+			player.renderer.material.SetColor("_Color",Color.white);
+			player.GetComponent<Player>().pos = position.hor_inversed;
+		}
+		
+	}
+	
+	IEnumerator switchVHL_Gravity(GameObject player)
 	{
 		float posPlayer = player.transform.position.y;
 		float pos = this.transform.position.y;
