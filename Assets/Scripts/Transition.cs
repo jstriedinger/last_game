@@ -18,12 +18,8 @@ public class Transition : MonoBehaviour {
 	void OnTriggerEnter(Collider other)
 	{
 		if(other.gameObject.tag == "Player")
-			StartCoroutine(ChangeGravity(other.gameObject));
+			StartCoroutine(other.gameObject.GetComponent<Player>().changeGravity());
 	}
 	
-	IEnumerator ChangeGravity(GameObject player)
-	{
-		yield return new WaitForSeconds(0.4f);
-		player.GetComponent<Player>().changeGravity();
-	}
+	
 }

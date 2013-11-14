@@ -23,9 +23,9 @@ public class Player : MonoBehaviour {
  
     void Update ()
     {
-		if(Input.GetKey(KeyCode.RightArrow))
+		if(Input.GetKey(KeyCode.RightArrow) && !cantMove(true))
 			transform.Translate(transform.right * speed*Time.deltaTime);
-		else if(Input.GetKey(KeyCode.LeftArrow))
+		else if(Input.GetKey(KeyCode.LeftArrow) && !cantMove(false))
 			transform.Translate(transform.right * -speed*Time.deltaTime);
 		if (Input.GetKeyDown(KeyCode.Space) && IsGrounded())
 		{
@@ -47,17 +47,30 @@ public class Player : MonoBehaviour {
   		return Physics.Raycast(transform.position, Gravitronned?Vector3.up:-Vector3.up, disToGround + 0.1f);
 	}
 	
-	
-	public void changeGravity()
+	public bool cantMove(bool r)
 	{
-		Debug.Log("gravity was: "+Gravitronned);
-		if(Gravitronned)
-			Physics.gravity *= 1;
-		
-		Physics.gravity *= -1;
-     	Gravitronned = true;
+		return Physics.Raycast(transform.position, r?Vector3.right:-Vector3.right, disToGround+0.1f);
+	}
 	
-		Debug.Log("gravity now is: "+Gravitronned);
+
+	
+	
+	public IEnumerator changeGravity()
+	{
+		if(Gravitronned)
+		{
+			this.gameObject.renderer.material.SetColor("_Color",Color.black);
+			yield return new WaitForSeconds(0.4f);
+			Physics.gravity *= -1;
+			Gravitronned = false;
+		}
+		else{
+			this.gameObject.renderer.material.SetColor("_Color",Color.white);
+			yield return new WaitForSeconds(0.4f);
+			Physics.gravity *= -1;
+	     	Gravitronned = true;
+			
+		}
 	}
 
 }
