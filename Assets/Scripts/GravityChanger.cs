@@ -63,8 +63,9 @@ public class GravityChanger : MonoBehaviour {
 			if(playerScript.pos == position.hor_inversed)
 			{
 				Physics.gravity = new Vector3(-9.8f,0,0);
-				player.rigidbody.AddForce(Vector3.right*70, ForceMode.VelocityChange);
-				player.rigidbody.AddForce(Vector3.up*50, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.right*60, ForceMode.VelocityChange);
+				yield return new WaitForSeconds(0.2f);
+				player.rigidbody.AddForce(Vector3.up*30, ForceMode.VelocityChange);
 				playerScript.changeState(position.ver_left,changeColor);			
 			}
 			else if(playerScript.pos == position.ver_left)
@@ -73,6 +74,38 @@ public class GravityChanger : MonoBehaviour {
 				player.rigidbody.AddForce(Vector3.right*-10, ForceMode.VelocityChange);
 				player.rigidbody.AddForce(Vector3.up*-5, ForceMode.VelocityChange);
 				playerScript.changeState(position.hor_inversed,changeColor);
+			}
+			break;
+		case gravSide.HV_L1:
+			//from normal to left
+			if(playerScript.pos == position.ver_left)
+			{
+				Physics.gravity = new Vector3(0,-9.8f,0);
+				player.rigidbody.AddForce(Vector3.up*60, ForceMode.VelocityChange);
+				yield return new WaitForSeconds(0.2f);
+				player.rigidbody.AddForce(Vector3.right*-30, ForceMode.VelocityChange);
+				playerScript.changeState(position.hor_normal,changeColor);
+			}
+			else if(playerScript.pos == position.hor_normal)
+			{
+				Physics.gravity = new Vector3(-9.8f,0,0);
+				player.rigidbody.AddForce(Vector3.right*10, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.up*-10, ForceMode.VelocityChange);
+				playerScript.changeState(position.ver_left, changeColor);
+			}
+			break;
+		case gravSide.HV_L2:
+			//from normal to left
+			if(playerScript.pos == position.ver_left)
+			{
+				Physics.gravity = new Vector3(0,-9.8f,0);
+				player.rigidbody.AddForce(Vector3.right*30, ForceMode.VelocityChange);
+				playerScript.changeState(position.hor_normal,changeColor);
+			}
+			else if(playerScript.pos == position.hor_normal)
+			{
+				Physics.gravity = new Vector3(-9.8f,0,0);
+				playerScript.changeState(position.ver_left, changeColor);
 			}
 			break;
 		}
