@@ -12,10 +12,13 @@ public class Player : MonoBehaviour {
 	public float maxV;
 	public position pos;
 	public bool Gravitronned = false;
+	private Color current;
 	
 	void Start()
 	{
 		disToGround = collider.bounds.extents.y;
+		current = Color.black;
+		pos = position.hor_normal;
 	}
  
     void Awake ()
@@ -93,40 +96,13 @@ public class Player : MonoBehaviour {
 		return Physics.Raycast(transform.position, r?Vector3.right:-Vector3.right, disToGround+0.1f);
 	}
 	
-
-	
-	
-	public IEnumerator changeGravity()
+	public void changeState(position newPos, bool switchColor)	
 	{
-		if(Gravitronned)
+		pos = newPos;
+		if(switchColor)
 		{
-			this.gameObject.renderer.material.SetColor("_Color",Color.black);
-			yield return new WaitForSeconds(0.4f);
-			Physics.gravity *= -1;
-			Gravitronned = false;
-		}
-		else{
-			this.gameObject.renderer.material.SetColor("_Color",Color.white);
-			yield return new WaitForSeconds(0.4f);
-			Physics.gravity *= -1;
-	     	Gravitronned = true;
-			
-		}
-	}
-	
-	public IEnumerator changeGravity_Side(bool r)
-	{
-		if(r)
-		{
-			//reset
-			Physics.gravity = new Vector3(9.8f,0f,0f);
-		}
-		else{
-			this.gameObject.renderer.material.SetColor("_Color",Color.white);
-			yield return new WaitForSeconds(0.4f);
-			Physics.gravity *= -1;
-	     	Gravitronned = true;
-			
+			current = (current==Color.white?Color.black:Color.white);
+			this.renderer.material.SetColor("_Color",current);
 		}
 	}
 

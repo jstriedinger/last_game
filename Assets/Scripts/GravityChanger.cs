@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum gravSide {horizontal, vertical, HV_Black, HV_White}
+public enum gravSide {horizontal, vertical, HV_R1, HV_R2, HV_Ri, HV_L1, HV_L2, HV_Li}
 public enum colorChange{white, black}
 
 public class GravityChanger : MonoBehaviour {
 	
 	public  gravSide dir;
+	public bool changeColor;
 	
 	// Use this for initialization
 	void Start () {
@@ -20,23 +21,61 @@ public class GravityChanger : MonoBehaviour {
 	
 	void OnTriggerEnter(Collider col)
 	{
-		if(col.gameObject.tag == "Player")
-		{
-			
-			switch(dir)
-			{
-			case gravSide.horizontal:
-				StartCoroutine(switchHor_Gravity(col.gameObject));
-				break;
-			case gravSide.vertical:
-				StartCoroutine(switchVer_Gravity(col.gameObject));
-				break;
-			case gravSide.HV_Black:
-				StartCoroutine(switchHV_BLACK_Gravity(col.gameObject));
-				break;
-			}
-		}
 		
+		if(col.gameObject.tag == "Player")
+			StartCoroutine(switchGravity(col.gameObject, dir, (dir==gravSide.HV_L2 || dir==gravSide.HV_R2)?true:false));
+		
+	}
+	
+	IEnumerator switchGravity(GameObject player, gravSide side, bool type)
+	{
+		Player playerScript = player.GetComponent<Player>();
+		switch(side)
+		{
+		case gravSide.horizontal:
+			yield return new WaitForSeconds(0.3f);
+			if(playerScript.pos == position.hor_normal)
+			{
+				Physics.gravity = new Vector3(0,9.8f,0);
+				if(changeColor)
+					playerScript.changeState(position.hor_inversed,true);
+			}
+			else if(playerScript.pos == position.hor_inversed)
+			{
+				Physics.gravity = new Vector3(0,-9.8f,0);
+				playerScript.changeState(position.hor_normal,changeColor);
+			}
+			break;
+		case gravSide.vertical:
+			yield return new WaitForSeconds(0.3f);
+			if(playerScript.pos == position.ver_right)
+			{
+				Physics.gravity = new Vector3(-9.8f,0,0);
+				playerScript.changeState(position.ver_left,changeColor);
+			}
+			else if(playerScript.pos == position.ver_left)
+			{
+				Physics.gravity = new Vector3(9.8f,0,0);
+				playerScript.changeState(position.ver_right,changeColor);
+			}
+			break;
+		case gravSide.HV_Li:
+			if(playerScript.pos == position.hor_inversed)
+			{
+				Physics.gravity = new Vector3(-9.8f,0,0);
+				player.rigidbody.AddForce(Vector3.right*70, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.up*50, ForceMode.VelocityChange);
+				playerScript.changeState(position.ver_left,changeColor);			
+			}
+			else if(playerScript.pos == position.ver_left)
+			{
+				Physics.gravity = new Vector3(0,9.8f,0);
+				player.rigidbody.AddForce(Vector3.right*-10, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.up*-5, ForceMode.VelocityChange);
+				playerScript.changeState(position.hor_inversed,changeColor);
+			}
+			break;
+		}
 	}
 	
 	IEnumerator switchHor_Gravity(GameObject player)
