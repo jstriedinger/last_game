@@ -1,7 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public enum gravSide {horizontal, vertical, HV_R1, HV_R2, HV_Ri, HV_L1, HV_L2, HV_Li}
+public enum gravSide {horizontal, vertical, HV_NR, HV_iR, HV_LN, HV_NL, HV_Li, HV_iL}
 public enum colorChange{white, black}
 
 public class GravityChanger : MonoBehaviour {
@@ -23,11 +23,11 @@ public class GravityChanger : MonoBehaviour {
 	{
 		
 		if(col.gameObject.tag == "Player")
-			StartCoroutine(switchGravity(col.gameObject, dir, (dir==gravSide.HV_L2 || dir==gravSide.HV_R2)?true:false));
+			StartCoroutine(switchGravity(col.gameObject, dir));
 		
 	}
 	
-	IEnumerator switchGravity(GameObject player, gravSide side, bool type)
+	IEnumerator switchGravity(GameObject player, gravSide side)
 	{
 		Player playerScript = player.GetComponent<Player>();
 		switch(side)
@@ -59,7 +59,7 @@ public class GravityChanger : MonoBehaviour {
 				playerScript.changeState(position.ver_right,changeColor);
 			}
 			break;
-		case gravSide.HV_Li:
+		case gravSide.HV_iL:
 			if(playerScript.pos == position.hor_inversed)
 			{
 				Physics.gravity = new Vector3(-9.8f,0,0);
@@ -76,7 +76,40 @@ public class GravityChanger : MonoBehaviour {
 				playerScript.changeState(position.hor_inversed,changeColor);
 			}
 			break;
-		case gravSide.HV_L1:
+		case gravSide.HV_Li:
+			if(playerScript.pos == position.hor_inversed)
+			{
+				Physics.gravity = new Vector3(-9.8f,0,0);
+				player.rigidbody.AddForce(Vector3.right*10, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.up*-10, ForceMode.VelocityChange);
+				playerScript.changeState(position.ver_left,changeColor);			
+			}
+			else if(playerScript.pos == position.ver_left)
+			{
+				Physics.gravity = new Vector3(0,9.8f,0);
+				player.rigidbody.AddForce(Vector3.right*15, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.up*10, ForceMode.VelocityChange);
+				playerScript.changeState(position.hor_inversed,changeColor);
+			}
+			break;
+		case gravSide.HV_iR:
+			if(playerScript.pos == position.hor_inversed)
+			{
+				Physics.gravity = new Vector3(9.8f,0,0);
+				player.rigidbody.AddForce(Vector3.up*-15, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.right*10, ForceMode.VelocityChange);
+				playerScript.changeState(position.ver_right,changeColor);
+				
+			}
+			else if(playerScript.pos == position.ver_right)
+			{
+				Physics.gravity = new Vector3(0,9.8f,0);
+				player.rigidbody.AddForce(Vector3.up*10, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.right*-15, ForceMode.VelocityChange);
+				playerScript.changeState(position.hor_inversed,changeColor);
+			}
+				break;
+		case gravSide.HV_LN:
 			//from normal to left
 			if(playerScript.pos == position.ver_left)
 			{
@@ -94,7 +127,7 @@ public class GravityChanger : MonoBehaviour {
 				playerScript.changeState(position.ver_left, changeColor);
 			}
 			break;
-		case gravSide.HV_L2:
+		case gravSide.HV_NL:
 			//from normal to left
 			if(playerScript.pos == position.ver_left)
 			{
@@ -106,6 +139,23 @@ public class GravityChanger : MonoBehaviour {
 			{
 				Physics.gravity = new Vector3(-9.8f,0,0);
 				playerScript.changeState(position.ver_left, changeColor);
+			}
+			break;
+		case gravSide.HV_NR:
+			//From normal to right
+			if(playerScript.pos == position.ver_right)
+			{
+				Physics.gravity = new Vector3(0,-9.8f,0);
+				player.rigidbody.AddForce(Vector3.right*-15, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.up*15, ForceMode.VelocityChange);
+				playerScript.changeState(position.hor_normal,changeColor);
+			}
+			else if(playerScript.pos == position.hor_normal)
+			{
+				Physics.gravity = new Vector3(9.8f,0,0);
+				player.rigidbody.AddForce(Vector3.right*10, ForceMode.VelocityChange);
+				player.rigidbody.AddForce(Vector3.up*15, ForceMode.VelocityChange);
+				playerScript.changeState(position.ver_right, changeColor);
 			}
 			break;
 		}
