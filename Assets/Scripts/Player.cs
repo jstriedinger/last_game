@@ -108,5 +108,4 @@ public class Player : MonoBehaviour {
 			this.renderer.material.SetColor("_Color",current);
 		}
 	}
-
 }
