@@ -14,10 +14,13 @@ public class Player : MonoBehaviour {
 	public bool Gravitronned = false;
 	private Color current;
 	
+	private Color myWhite = new Color(0.925f,0.941f,0.945f,1f);
+	private Color myBlack = new Color(0.05f,0.05f,0.05f,1f);
+	
 	void Start()
 	{
 		disToGround = collider.bounds.extents.y;
-		current = Color.black;
+		current = myBlack;
 		pos = position.hor_normal;
 	}
  
@@ -101,7 +104,7 @@ public class Player : MonoBehaviour {
 		pos = newPos;
 		if(switchColor)
 		{
-			current = (current==Color.white?Color.black:Color.white);
+			current = (current== myWhite?myBlack:myWhite);
 			this.renderer.material.SetColor("_Color",current);
 		}
 	}
