@@ -108,4 +108,13 @@ public class Player : MonoBehaviour {
 			this.renderer.material.SetColor("_Color",current);
 		}
 	}
+	
+	public void changeColor(bool a)
+	{
+		if(a)
+			current = myBlack;
+		else
+			current = myWhite;
+		this.renderer.material.SetColor("_Color",current);
+	}
 }
